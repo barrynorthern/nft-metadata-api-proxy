@@ -34,7 +34,7 @@ const MetadataRepo = {
               return data;
             })
         } else {
-          return { error: `Token ${id} doesn't exist`};
+          return { error: `You may lookee for number ${id} but yees gotta mint it first. SNEAK!`};
         }
       });
   }
