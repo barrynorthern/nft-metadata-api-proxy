@@ -11,6 +11,16 @@ const erc721Contract = new ethers.Contract(process.env.CONTRACT_ADDRESS, ERC721_
 
 const AUTO_REVEAL_ID = 1200;
 
+function getMetadata(id) {
+  return fetch(`${process.env.SOURCE_BASE_URI}${id}`, {method: 'GET'})
+            .then(res => {
+              return res.json();
+            })
+            .then((data) => {
+              return data;
+            })
+}
+
 const MetadataRepo = {
   getAll() {
     return cache.get("TotalSupply", () => erc721Contract.totalSupply().then((bigNumber) => bigNumber.toNumber()))
@@ -20,26 +30,19 @@ const MetadataRepo = {
   },
   
   getById(id) {
+    if (id <= AUTO_REVEAL_ID) {
+      return getMetadata(id);
+    }
+
     return cache.get(`Token_${id}`, () => {
-        if (id <= AUTO_REVEAL_ID) {
-          return Promise.resolve(true);
-        }
-        else {
-          return erc721Contract
-          .ownerOf(id)
-          .then(() => true)
-          .catch(() => false);
-        }
+        return erc721Contract
+        .ownerOf(id)
+        .then(() => true)
+        .catch(() => false);
       }, 0)
       .then((exists) => {
         if (exists) {
-          return fetch(`${process.env.SOURCE_BASE_URI}${id}`, {method: 'GET'})
-            .then(res => {
-              return res.json();
-            })
-            .then((data) => {
-              return data;
-            })
+          return getMetadata(id);
         } else {
           return { error: `You may lookee for number ${id} but yees gotta mint it first. SNEAK!`};
         }
