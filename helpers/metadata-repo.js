@@ -29,17 +29,17 @@ const MetadataRepo = {
   //     });
   // },
   
-  getById(id) {
+  getById: async (id) => {
     if (id <= AUTO_REVEAL_ID) {
-      return getMetadata(id);
+      return await getMetadata(id);
     }
     else {
-      return new Promise({
+      return {
         image: "https://ipfs.io/ipfs/bafkreievyqdorbs66dm4cbno3oogafklpyodncjmnxx5smkeojbequpxgm",
         name: "Goblin Loot WTF - Unrevealed",
         description: "What the feck? Iz mostly CRUD! May-b summink speshul. May-b.",
         attributes: []
-        });
+        };
     }
     // return cache.get(`Token_${id}`, () => {
     //     return erc721Contract

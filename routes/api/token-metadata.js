@@ -21,10 +21,8 @@ router.get('/:tokenId', function(req, res, next) {
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   let tokenId = parseInt(req.params.tokenId);
-  metadataRepo.getById(tokenId)
-    .then((data) => {
-      return res.json(data);
-    });
+  const data = await metadataRepo.getById(tokenId);
+  return res.json(data);
 });
 
 module.exports = router;
