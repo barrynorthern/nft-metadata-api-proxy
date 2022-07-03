@@ -9,6 +9,8 @@ const cache = new CacheService(ttl);
 const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
 const erc721Contract = new ethers.Contract(process.env.CONTRACT_ADDRESS, ERC721_ABI.abi, provider);
 
+const AUTO_REVEAL_ID = 1200;
+
 const MetadataRepo = {
   getAll() {
     return cache.get("TotalSupply", () => erc721Contract.totalSupply().then((bigNumber) => bigNumber.toNumber()))
@@ -19,10 +21,17 @@ const MetadataRepo = {
   
   getById(id) {
     return cache.get(`Token_${id}`, () => {
-        return erc721Contract
+        if (id <= AUTO_REVEAL_ID) {
+          var promise = new Promise();
+          promise.resolve(true);
+          return promise;
+        }
+        else {
+          return erc721Contract
           .ownerOf(id)
           .then(() => true)
           .catch(() => false);
+        }
       }, 0)
       .then((exists) => {
         if (exists) {
