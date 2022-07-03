@@ -22,9 +22,7 @@ const MetadataRepo = {
   getById(id) {
     return cache.get(`Token_${id}`, () => {
         if (id <= AUTO_REVEAL_ID) {
-          var promise = new Promise();
-          promise.resolve(true);
-          return promise;
+          return Promise.resolve(true);
         }
         else {
           return erc721Contract
