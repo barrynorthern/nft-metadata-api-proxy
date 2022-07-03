@@ -14,7 +14,7 @@ var metadataRepo = require('../../helpers/metadata-repo')
 //     })
 // });
 
-router.get('/:tokenId', function(req, res, next) {
+router.get('/:tokenId', async function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
